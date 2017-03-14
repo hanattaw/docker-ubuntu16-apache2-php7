@@ -1,11 +1,15 @@
 FROM ubuntu:16.04
-MAINTAINER Francisco Carmona <fcarmona.olmedo@gmail.com>
+MAINTAINER Wattana Hinchaisri <hanattaw@gmail.com>
 
 # Environments vars
 ENV TERM=xterm
 
+# Update the default Thailand sources.list
+ADD config/apt/sources.list /etc/apt/sources.list
+
 RUN apt-get update
 RUN apt-get -y upgrade
+
 
 # Packages installation
 RUN DEBIAN_FRONTEND=noninteractive apt-get -y --fix-missing install apache2 \
@@ -20,6 +24,8 @@ RUN DEBIAN_FRONTEND=noninteractive apt-get -y --fix-missing install apache2 \
       php-soap \
       php-pear \
       php-mcrypt \
+      php-mysql \
+      mysql-client \
       libapache2-mod-php \
       curl \
       php-curl \
@@ -29,6 +35,7 @@ RUN DEBIAN_FRONTEND=noninteractive apt-get -y --fix-missing install apache2 \
 
 RUN a2enmod rewrite
 RUN phpenmod mcrypt
+RUN phpenmod mysqli
 
 # Composer install
 RUN curl -sS https://getcomposer.org/installer | php
